@@ -145,8 +145,8 @@ This is the match found between a query with 3 nodes and a target graph. The que
 
 
 ### Citation
-    "Giugno, R., Bonnici, V., Bombieri, N., Pulvirenti, A., Ferro, A., & Shasha, D. (2013). Grapes:<br>
-    A software for parallel searching on biological graphs targeting multi-core architectures. <br>
+    "Giugno, R., Bonnici, V., Bombieri, N., Pulvirenti, A., Ferro, A., & Shasha, D. (2013). Grapes:
+    A software for parallel searching on biological graphs targeting multi-core architectures.
     PloS one, 8(10), e76911."
    (http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0076911)
     
