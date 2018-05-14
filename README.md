@@ -1,6 +1,8 @@
 # GRAPES
-<span style="color:red;"> Version: **2.9.mp.vf2, April, 2013**  </span>
+
 >A SMP querying system for efficient parallel subgraph isomorphism in databases of graphs.
+
+Version: **2.9.mp.vf2, April, 2013**
 
 
 ### Description:
@@ -37,43 +39,55 @@ The executable *grapes* allows both to build the database index and to run a que
 ##### Build Source Code
 
 Executables are available only after building source code on your system.
->cd GRAPES-2.9.mp.vf2
-make clean 
-make -B
+ ```
+ cd GRAPES-2.9.mp.vf2
+ make clean 
+ make -B
+ ```
 At the and of the build process,the executable grapes will be available.
 
 ##### Database Index Construction
 
 Build the index of the given database of graphs.
->./grapes NTHREADS -b -[gfu|gfd] db_file [-lp lp]
+```
+./grapes NTHREADS -b -[gfu|gfd] db_file [-lp lp]
+```
     
 
-**NTHREADS** -> number of parallel threads <br>
-**-[gfu|gfd]** -> input file format ( ***-gfu***: undirected graphs file format; ***-gfd***: directed graphs file format) <br>
-**db_file** ->	textual graphs database file <br>
-**[-lp lp]** -> OPTIONAL, specify feature paths length, namely the depth of the DFS which extract paths. lp must be greather than 1, eg -lp 3. Default value -lp 4.
+| Attribute | Description |
+|-----------------------|-------------|
+|**NTHREADS** |        number of parallel threads|
+|**-[gfu  &#124; gfd]**| input file format <br> ***-gfu*** : undirected graphs file format; <br>   ***-gfd***  : directed graphs file format |
+|**db_file** | textual graphs database file|
+|**[-lp lp]**| OPTIONAL, specify feature paths length, namely the depth of the DFS which extract paths. lp must be greather than 1, eg -lp 3. Default value -lp 4.|
+
 
 The indexing phase ever produces the *db_file.index.grapes* file in which the database index is stored.
 
 
 Example: build the database index of the PCM dataset (undirected graphs) by 6 parallel threads
->./grapes 6 -b -gfu pcms/db/pcms_all.200.gfu
-
+```
+./grapes 6 -b -gfu pcms/db/pcms_all.200.gfu
+```
 The command creates the file *pcms/db/pcms_all.200.gfu.index.grapes* which will be automatically used on querying.
 
 ##### Querying
+```
 >./grapes NTHREADS -f -[gfu|gfd] db_file query_file -[no|console|file] [-lp lp]
-
-**NTHREADS** ->	number of parallel threads <br>
-**-[gfu|gfd]**-> input file format (-gfu: undirected graphs file format;-gfd: directed graphs file format) <br>
-**db_file** -> textual graphs database file <br>
-**query_file** -> textual query graph file. It must contain just one graph <br>
-**-[no|console|file]** ->	print found matches (sub-isomorphisms) ( ***-no***:do not print; ***-console***:print matches on screen; ***-file***:print matches on files. Each thread prints found matches in a different file ) <br>
-**[-lp lp]** -> OPTIONAL ONLY IF the database index was built with a lp value different from 4,specify feature paths length, namely the depth of the DFS which extract paths. lp must be greater than 1, eg -lp 3. Default value -lp 4.
+```
+| Attribute | Description |
+|-----------------------|-------------|
+|**NTHREADS** |        number of parallel threads|
+|**-[gfu  &#124; gfd]**| input file format <br> ***-gfu*** : undirected graphs file format; <br>   ***-gfd***  : directed graphs file format |
+|**db_file** | textual graphs database file|
+|**query_file** | textual query graph file. It must contain just one graph |
+|**-[no &#124; console &#124; file]** | print found matches (sub-isomorphisms) <br> ***-no*** :do not print; <br> ***-console*** :print matches on screen; <br> ***-file*** :print matches on files. Each thread prints found matches in a different file
+|**[-lp lp]** | OPTIONAL ONLY IF the database index was built with a lp value different from 4,specify feature paths length, namely the depth of the DFS which extract paths. lp must be greater than 1, eg -lp 3. Default value -lp 4.|
 
 Example: search a query graphs (undirected) inside the PCM dataset (undirected) by 6 parallel threads and print matches on screen
+```
 >./grapes 6 -b -gfu pcms/db/pcms_all.200.gfu pcms/queries/query_32_1ARO.cm.L.gfu -console
-
+```
 <span style="color:red">ATTENTION:</span> before run a query, the database index must have been computed by the command *grapes -b* and the resultant *.index.grapes* file must be maintained in the same directory of the database textual file.
 
 ### Formats
@@ -121,14 +135,18 @@ In the case of undirected graphs, 1 0 is a duplicate of the edge 0 1.
 ##### Output Format
 
 GRAPES outputs found matches in the following format:
->[DB Graph ID]:{([query node id], [target node id]), ...}
-
+```
+[DB Graph ID]:{([query node id], [target node id]), ...}
+```
 Example
 >0:{(0,10),(2,11),(1,12)}
 
 This is the match found between a query with 3 nodes and a target graph. The query node with ID equals to 0 was matched to the target node with ID 10, and so on.
 
 
-
-
-#### *[<span style="color:blue"> Go to the site </span>](http://ncrnadb.scienze.univr.it/sites/GRAPES-website/grapes.html)*
+### Citation
+    "Giugno, R., Bonnici, V., Bombieri, N., Pulvirenti, A., Ferro, A., & Shasha, D. (2013). Grapes:<br>
+    A software for parallel searching on biological graphs targeting multi-core architectures. <br>
+    PloS one, 8(10), e76911."
+   (http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0076911)
+    
