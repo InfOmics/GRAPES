@@ -1,0 +1,482 @@
+/*
+ * RIGraphReaders.cpp
+ *
+ *  Created on: Feb 11, 2013
+ *      Author: vbonnici
+ */
+/*
+Copyright (c) 2013 by Rosalba Giugno
+
+RI is provided under the terms of The MIT License (MIT):
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software,
+and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+#ifndef RIGRAPHREADERS_H
+#define RIGRAPHREADERS_H
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <fstream>
+#include <string.h>
+
+#include "LabelMap.h"
+
+namespace RILib{
+using namespace GRAPESLib;
+
+#define STR_READ_LENGTH 256
+
+
+
+class RIGraphReader{
+public:
+	LabelMap& _labelMap;
+	RIGraphReader(LabelMap& labelMap) : _labelMap(labelMap){}
+
+	virtual ~RIGraphReader(){}
+
+	virtual bool readGraph(QueryGraph* g) = 0;
+	virtual bool readGraph(ReferenceGraph* g) = 0;
+
+	virtual bool open(const std::string& fname) = 0;
+	virtual bool close() = 0;
+};
+
+//class GraphsQueueReader : public GraphReader{
+//public:
+//	std::queue<Graph>& _queue;
+//	graph_id_t c_id;
+//
+//	GraphsQueueReader(LabelMap& labelMap, std::queue<Graph>& queue)
+//			: GraphReader(labelMap), _queue(queue){
+//		c_id=0;
+//	}
+//	virtual bool readGraph(Graph& g){
+//		if(!_queue.empty()){
+//			g = _queue.front();
+//			_queue.pop();
+//			c_id++;
+//			return true;
+//		}
+//		return false;
+//	}
+//	virtual bool gotoGraph(graph_id_t id){
+//		while(c_id<id && !_queue.empty()){
+//			_queue.pop();
+//			c_id++;
+//		}
+//		if(!_queue.empty()){
+//			return true;
+//		}
+//		return false;
+//	}
+//};
+
+class RIGraphReader_gfu : public RIGraphReader{
+public:
+
+	FILE* fd;
+	graph_id_t c_id;
+
+	bool direct;
+
+	RIGraphReader_gfu(LabelMap& labelMap)
+			: RIGraphReader(labelMap){
+		c_id = 0;
+		direct = false;
+		fd = NULL;
+	}
+	~RIGraphReader_gfu(){}
+
+	virtual bool open(const std::string& fname){
+		fd = fopen(fname.c_str(), "r");
+		if (fd==NULL){
+			printf("ERROR: Cannot open input file %s\n", fname.c_str());
+			exit(1);
+		}
+		return true;
+	}
+	virtual bool close(){
+		fclose(fd);
+		return true;
+	}
+
+	struct gr_neighs_t{
+	public:
+		int nid;
+		gr_neighs_t *next;
+	};
+
+	virtual bool readGraph(QueryGraph* graph){
+		char str[STR_READ_LENGTH];
+		int i,j;
+
+		if (fscanf(fd,"%s",str) != 1){	//#graphname
+			std::cout<<"error reading graphname\n";
+			return false;
+		}
+	#ifdef DRIVER_DEBUG
+		std::cout<<"[graph] name["<<str<<"]\n";
+	#endif
+		if (fscanf(fd,"%d",&(graph->nof_nodes)) != 1){//nof nodes
+			std::cout<<"error reading nof nodes\n";
+			return false;
+		}
+	#ifdef DRIVER_DEBUG
+		std::cout<<"[graph] nof nodes["<<graph->nof_nodes<<"]\n";
+	#endif
+
+		//node labels
+		char *label = new char[STR_READ_LENGTH];
+		for(i=0; i<graph->nof_nodes; i++){
+			if (fscanf(fd,"%s",label) != 1){
+				return false;
+			}
+	#ifdef DRIVER_DEBUG
+		std::cout<<"[graph] node["<<i<<"] label["<<*((std::string*)(graph->nodes_attrs[i]))<<"]\n";
+	#endif
+		}
+
+		//edges
+		graph->adj_sizes = (int*)calloc(graph->nof_nodes, sizeof(int));
+		graph->out_adj_sizes = (int*)calloc(graph->nof_nodes, sizeof(int));
+		graph->in_adj_sizes = (int*)calloc(graph->nof_nodes, sizeof(int));
+
+		gr_neighs_t **ns_o = (gr_neighs_t**)malloc(graph->nof_nodes * sizeof(gr_neighs_t));
+		gr_neighs_t **ns_i = (gr_neighs_t**)malloc(graph->nof_nodes * sizeof(gr_neighs_t));
+		for(i=0; i<graph->nof_nodes; i++){
+			ns_o[i] = NULL;
+			ns_i[i] = NULL;
+		}
+		int temp = 0;
+		if (fscanf(fd,"%d",&temp) != 1){//number of edges
+			std::cout<<"error reading nof edges\n";
+			return false;
+		}
+	#ifdef DRIVER_DEBUG
+		std::cout<<"[graph] nof edges["<<temp<<"]\n";
+	#endif
+		int es = 0, et = 0;
+		for(i=0; i<temp; i++){
+			if (fscanf(fd,"%d",&es) != 1){//source node
+				std::cout<<"error reading source node\n";
+				return false;
+			}
+	#ifdef DRIVER_DEBUG
+		std::cout<<"[graph] e_source["<<es<<"]\n";
+	#endif
+			if (fscanf(fd,"%d",&et) != 1){//target node
+				std::cout<<"error reading target node\n";
+				return false;
+			}
+	#ifdef DRIVER_DEBUG
+		std::cout<<"[graph] e_target["<<et<<"]\n";
+	#endif
+
+			graph->adj_sizes[es]++;
+			graph->adj_sizes[et]++;
+			graph->out_adj_sizes[es]++;
+			graph->in_adj_sizes[et]++;
+
+			if(ns_o[es] == NULL){
+				ns_o[es] = (gr_neighs_t*)malloc(sizeof(gr_neighs_t));
+				ns_o[es]->nid = et;
+				ns_o[es]->next = NULL;
+			}
+			else{
+				gr_neighs_t* n = (gr_neighs_t*)malloc(sizeof(gr_neighs_t));
+				n->nid = et;
+				n->next = (struct gr_neighs_t*)ns_o[es];
+				ns_o[es] = n;
+			}
+
+
+
+
+			if(!direct){
+			graph->adj_sizes[et]++;
+			graph->adj_sizes[es]++;
+			graph->out_adj_sizes[et]++;
+			graph->in_adj_sizes[es]++;
+
+			if(ns_o[et] == NULL){
+				ns_o[et] = (gr_neighs_t*)malloc(sizeof(gr_neighs_t));
+				ns_o[et]->nid = es;
+				ns_o[et]->next = NULL;
+			}
+			else{
+				gr_neighs_t* n = (gr_neighs_t*)malloc(sizeof(gr_neighs_t));
+				n->nid = es;
+				n->next = (struct gr_neighs_t*)ns_o[et];
+				ns_o[et] = n;
+			}
+			}
+
+		}
+
+
+		graph->adj_list = (int**)malloc(graph->nof_nodes * sizeof(int*));
+		graph->adj_attrs = (void***)malloc(graph->nof_nodes * sizeof(void**));
+		int* ink = (int*)calloc(graph->nof_nodes, sizeof(int));
+		for (i=0; i<graph->nof_nodes; i++){
+			graph->adj_list[i] = (int*)calloc(graph->adj_sizes[i], sizeof(int));
+			graph->adj_attrs[i] = (void**)malloc(graph->adj_sizes[i] * sizeof(void*));
+		}
+
+		int eid = 0;
+		for (i=0; i<graph->nof_nodes; i++){
+			gr_neighs_t *n = ns_o[i];
+			for (j=0; j<graph->out_adj_sizes[i]; j++){
+				graph->adj_list[i][j] = n->nid;
+				graph->adj_attrs[i][j] = NULL;
+
+				graph->adj_list[n->nid][graph->out_adj_sizes[n->nid] + ink[n->nid]] = i;
+
+	#ifdef DEBUG
+				std::cout<<"[debug][reader] eid["<<i<<"]["<<j<<"]("<<i<<","<<graph->adj_list[i][j]<<") = "<<eid<<"\n";
+				std::cout<<"[debug][reader] eid["<<(n->nid)<<"]["<<(graph->out_adj_sizes[n->nid] + ink[n->nid])
+						<<"]("<<n->nid<<","<<graph->adj_list[n->nid][(graph->out_adj_sizes[n->nid] + ink[n->nid])]<<") = "<<eid<<"\n";
+	#endif
+
+				ink[n->nid]++;
+				eid++;
+
+				n = n->next;
+			}
+		}
+
+
+
+		for(int i=0; i<graph->nof_nodes; i++){
+			if(ns_o[i] != NULL){
+				gr_neighs_t *p = NULL;
+				gr_neighs_t *n = ns_o[i];
+				for (j=0; j<graph->out_adj_sizes[i]; j++){
+					if(p!=NULL)
+						free(p);
+					p = n;
+					n = n->next;
+				}
+				if(p!=NULL)
+				free(p);
+			}
+
+			if(ns_i[i] != NULL){
+				gr_neighs_t *p = NULL;
+				gr_neighs_t *n = ns_i[i];
+				for (j=0; j<graph->out_adj_sizes[i]; j++){
+					if(p!=NULL)
+						free(p);
+					p = n;
+					n = n->next;
+				}
+				if(p!=NULL)
+				free(p);
+			}
+
+
+//			free(ns_o);
+//			free(ns_i);
+		}
+
+
+
+
+
+
+		return true;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	virtual bool readGraph(ReferenceGraph* graph){
+		char str[STR_READ_LENGTH];
+		int i,j;
+
+		if (fscanf(fd,"%s",str) != 1){	//#graphname
+			return false;
+		}
+		if (fscanf(fd,"%d",&(graph->nof_nodes)) != 1){//nof nodes
+			return false;
+		}
+
+		//node labels
+		char *label = new char[STR_READ_LENGTH];
+		for(i=0; i<graph->nof_nodes; i++){
+			if (fscanf(fd,"%s",label) != 1){
+				return false;
+			}
+		}
+
+		//edges
+		graph->out_adj_sizes = (int*)calloc(graph->nof_nodes, sizeof(int));
+		graph->in_adj_sizes = (int*)calloc(graph->nof_nodes, sizeof(int));
+
+		gr_neighs_t **ns_o = (gr_neighs_t**)malloc(graph->nof_nodes * sizeof(gr_neighs_t));
+		gr_neighs_t **ns_i = (gr_neighs_t**)malloc(graph->nof_nodes * sizeof(gr_neighs_t));
+		for(i=0; i<graph->nof_nodes; i++){
+			ns_o[i] = NULL;
+			ns_i[i] = NULL;
+		}
+		int temp = 0;
+		if (fscanf(fd,"%d",&temp) != 1){//number of edges
+			return false;
+		}
+
+		int es = 0, et = 0;
+		for(i=0; i<temp; i++){
+			if (fscanf(fd,"%d",&es) != 1){//source node
+				return false;
+			}
+			if (fscanf(fd,"%d",&et) != 1){//target node
+				return false;
+			}
+
+			graph->out_adj_sizes[es]++;
+			graph->in_adj_sizes[et]++;
+
+			if(ns_o[es] == NULL){
+				ns_o[es] = (gr_neighs_t*)malloc(sizeof(gr_neighs_t));
+				ns_o[es]->nid = et;
+				ns_o[es]->next = NULL;
+			}
+			else{
+				gr_neighs_t* n = (gr_neighs_t*)malloc(sizeof(gr_neighs_t));
+				n->nid = et;
+				n->next = (struct gr_neighs_t*)ns_o[es];
+				ns_o[es] = n;
+			}
+
+			if(!direct){
+			graph->out_adj_sizes[et]++;
+			graph->in_adj_sizes[es]++;
+
+			if(ns_o[et] == NULL){
+				ns_o[et] = (gr_neighs_t*)malloc(sizeof(gr_neighs_t));
+				ns_o[et]->nid = es;
+				ns_o[et]->next = NULL;
+			}
+			else{
+				gr_neighs_t* n = (gr_neighs_t*)malloc(sizeof(gr_neighs_t));
+				n->nid = es;
+				n->next = (struct gr_neighs_t*)ns_o[et];
+				ns_o[et] = n;
+			}
+			}
+
+		}
+
+
+		graph->out_adj_list = (int**)malloc(graph->nof_nodes * sizeof(int*));
+		graph->in_adj_list = (int**)malloc(graph->nof_nodes * sizeof(int*));
+		graph->out_adj_attrs = (void***)malloc(graph->nof_nodes * sizeof(void**));
+
+		int* ink = (int*)calloc(graph->nof_nodes, sizeof(int));
+		for (i=0; i<graph->nof_nodes; i++){
+			graph->in_adj_list[i] = (int*)calloc(graph->in_adj_sizes[i], sizeof(int));
+
+		}
+		for (i=0; i<graph->nof_nodes; i++){
+			// reading degree and successors of vertex i
+			graph->out_adj_list[i] = (int*)calloc(graph->out_adj_sizes[i], sizeof(int));
+			graph->out_adj_attrs[i] = (void**)malloc(graph->out_adj_sizes[i] * sizeof(void*));
+
+			gr_neighs_t *n = ns_o[i];
+			for (j=0; j<graph->out_adj_sizes[i]; j++){
+				graph->out_adj_list[i][j] = n->nid;
+				graph->out_adj_attrs[i][j] = NULL;
+
+				graph->in_adj_list[n->nid][ink[n->nid]] = i;
+
+				ink[n->nid]++;
+
+				n = n->next;
+			}
+		}
+
+		graph->sort_edges();
+
+
+
+		for(int i=0; i<graph->nof_nodes; i++){
+			if(ns_o[i] != NULL){
+				gr_neighs_t *p = NULL;
+				gr_neighs_t *n = ns_o[i];
+				for (j=0; j<graph->out_adj_sizes[i]; j++){
+					if(p!=NULL)
+						free(p);
+					p = n;
+					n = n->next;
+				}
+				if(p!=NULL)
+				free(p);
+			}
+
+			if(ns_i[i] != NULL){
+				gr_neighs_t *p = NULL;
+				gr_neighs_t *n = ns_i[i];
+				for (j=0; j<graph->out_adj_sizes[i]; j++){
+					if(p!=NULL)
+						free(p);
+					p = n;
+					n = n->next;
+				}
+				if(p!=NULL)
+				free(p);
+			}
+//			free(ns_o);
+//			free(ns_i);
+		}
+
+		return true;
+	}
+};
+
+}
+
+
+#endif
