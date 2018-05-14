@@ -21,10 +21,10 @@ Note however that some third party components in GRAPES require that you referen
 You are free to link or use GRAPES inside source code of your own program. If do so, please reference (cite) GRAPES and this website. 
 We appreciate bug fixes and would be happy to collaborate for improvements.
 
->Copyright (c) 2013 by Rosalba Giugno 
-GRAPES is provided under the terms of The MIT License (MIT): 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+>Copyright (c) 2013 by Rosalba Giugno <br>
+GRAPES is provided under the terms of The MIT License (MIT): <br>
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: <br>
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<br>
 \
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
