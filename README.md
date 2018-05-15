@@ -4,6 +4,7 @@
 
 Version: **2.9.mp.vf2, April, 2013**
 
+<hr />
 
 ### Description
 GRAPES is a querying system for parallel searching in databases of graphs, and single target graph, using symmetric multiprocessing (SMP) architectures. It implements a parallel version of well established graph searching algorithms providing efficient solutions for graphs indexing and matching.
@@ -16,6 +17,8 @@ The GRAPES method consists of three main phases: indexing, filtering, and matchi
 In the indexing phase, features are extracted from target graphs and a database index is built off-line. A feature is a labeled path presents in a graph. GRAPES extracts all paths up to a fixed length (lp) and stores them in a compact trie structure. Moreover, starting nodes of such paths are also stored. Once the index is built, the system is able to find subgraph isomorphims between a query and all the target graphs. The filtering phase allows to a priori discard such database graphs which do not contain the query's features. It is also able to preliminarily recognize unmatching nodes, and entire regions, of database graphs. This useful behavior allows GRAPES to dial both with large database or single target graphs. Finally, an exact subgraph matching algorithm is run in parallel. 
 See the related scientific paper for more details.
 
+<hr />
+
 ### License
 
 GRAPES is distributed under the MIT license. This means that it is free for both academic and commercial use. 
@@ -24,6 +27,7 @@ You are free to link or use GRAPES inside source code of your own program. If do
 We appreciate bug fixes and would be happy to collaborate for improvements. <br>
 [MIT License](https://raw.githubusercontent.com/GiugnoLab/GRAPES/master/LICENSE)
 
+<hr />
 
 ### Usage
 
@@ -68,7 +72,7 @@ The command creates the file *pcms/db/pcms_all.200.gfu.index.grapes* which will 
 
 ##### Querying
 ```
->./grapes NTHREADS -f -[gfu|gfd] db_file query_file -[no|console|file] [-lp lp]
+./grapes NTHREADS -f -[gfu|gfd] db_file query_file -[no|console|file] [-lp lp]
 ```
 | Attribute | Description |
 |-----------------------|-------------|
@@ -84,6 +88,8 @@ Example: search a query graphs (undirected) inside the PCM dataset (undirected) 
 >./grapes 6 -b -gfu pcms/db/pcms_all.200.gfu pcms/queries/query_32_1ARO.cm.L.gfu -console
 ```
 <span style="color:red">ATTENTION:</span> before run a query, the database index must have been computed by the command *grapes -b* and the resultant *.index.grapes* file must be maintained in the same directory of the database textual file.
+
+<hr />
 
 ### Formats
 
@@ -138,9 +144,12 @@ Example
 
 This is the match found between a query with 3 nodes and a target graph. The query node with ID equals to 0 was matched to the target node with ID 10, and so on.
 
+<hr />
+
 ### Dataset 
 [Dataset repository](https://github.com/GiugnoLab/Dataset-GRAPES)
 
+<hr />
 
 ### Citation
     "Giugno, R., Bonnici, V., Bombieri, N., Pulvirenti, A., Ferro, A., & Shasha, D. (2013). Grapes:
