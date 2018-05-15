@@ -138,6 +138,9 @@ Example
 
 This is the match found between a query with 3 nodes and a target graph. The query node with ID equals to 0 was matched to the target node with ID 10, and so on.
 
+### Dataset 
+[Dataset repository](https://github.com/GiugnoLab/Dataset-GRAPES)
+
 
 ### Citation
     "Giugno, R., Bonnici, V., Bombieri, N., Pulvirenti, A., Ferro, A., & Shasha, D. (2013). Grapes:
