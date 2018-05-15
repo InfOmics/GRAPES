@@ -23,12 +23,6 @@ Note however that some third party components in GRAPES require that you referen
 You are free to link or use GRAPES inside source code of your own program. If do so, please reference (cite) GRAPES and this website. 
 We appreciate bug fixes and would be happy to collaborate for improvements.
 
->Copyright (c) 2013 by Rosalba Giugno <br>
-GRAPES is provided under the terms of The MIT License (MIT): <br>
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: <br>
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<br>
-\
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ### Usage
 
@@ -148,5 +142,18 @@ This is the match found between a query with 3 nodes and a target graph. The que
     "Giugno, R., Bonnici, V., Bombieri, N., Pulvirenti, A., Ferro, A., & Shasha, D. (2013). Grapes:
     A software for parallel searching on biological graphs targeting multi-core architectures.
     PloS one, 8(10), e76911."
-   (http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0076911)
+   <span style="color:blue">[Online version](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0076911) </span>
+   
+   BibTeX format:
+   
+    "@article{giugno2013grapes,
+    title={Grapes: A software for parallel searching on biological graphs targeting multi-core architectures},
+    author={Giugno, Rosalba and Bonnici, Vincenzo and Bombieri, Nicola and Pulvirenti, Alfredo and Ferro, Alfredo and Shasha, Dennis},
+    journal={PloS one},
+    volume={8},
+    number={10},
+    pages={e76911},
+    year={2013},
+    publisher={Public Library of Science}
+     }"
     
