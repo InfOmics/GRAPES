@@ -5,7 +5,7 @@
 Version: **2.9.mp.vf2, April, 2013**
 
 
-### Description:
+### Description
 GRAPES is a querying system for parallel searching in databases of graphs, and single target graph, using symmetric multiprocessing (SMP) architectures. It implements a parallel version of well established graph searching algorithms providing efficient solutions for graphs indexing and matching.
 
 
