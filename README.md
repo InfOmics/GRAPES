@@ -109,7 +109,7 @@ Labels are case sensitive.
 
 Inside a graphs database file, graphs IDs are assigned following the order in which they are written into the input file.
 
-An example of input file is the following:
+An example of input file is the following one:
 
 >#my_graph <br>
 4 <br>
