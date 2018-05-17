@@ -25,7 +25,7 @@ GRAPES is distributed under the MIT license. This means that it is free for both
 Note however that some third party components in GRAPES require that you reference certain works in scientific publications. 
 You are free to link or use GRAPES inside source code of your own program. If do so, please reference (cite) GRAPES and this website. 
 We appreciate bug fixes and would be happy to collaborate for improvements. <br>
-[MIT License](https://raw.githubusercontent.com/GiugnoLab/GraphGrepSX/master/LICENSE.txt)
+[MIT License](https://raw.githubusercontent.com/GiugnoLab/GRAPES/master/LICENSE)
 
 <hr />
 
