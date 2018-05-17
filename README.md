@@ -48,6 +48,7 @@ We appreciate bug fixes and would be happy to collaborate for improvements. <br>
     publisher={Public Library of Science}
      }"
     
+<hr />
 
 ### Usage
 
