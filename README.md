@@ -29,6 +29,26 @@ We appreciate bug fixes and would be happy to collaborate for improvements. <br>
 
 <hr />
 
+### Citation
+    "Giugno, R., Bonnici, V., Bombieri, N., Pulvirenti, A., Ferro, A., & Shasha, D. (2013). Grapes:
+    A software for parallel searching on biological graphs targeting multi-core architectures.
+    PloS one, 8(10), e76911."
+   <span style="color:blue">[Online version](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0076911) </span> <br>
+   [Cited by](https://scholar.google.it/scholar?cites=4839872088400060775&as_sdt=2005&sciodt=0,5&hl=it) <br>
+   ###### BibTeX format:
+   
+    "@article{giugno2013grapes,
+    title={Grapes: A software for parallel searching on biological graphs targeting multi-core architectures},
+    author={Giugno, Rosalba and Bonnici, Vincenzo and Bombieri, Nicola and Pulvirenti, Alfredo and Ferro, Alfredo and Shasha, Dennis},
+    journal={PloS one},
+    volume={8},
+    number={10},
+    pages={e76911},
+    year={2013},
+    publisher={Public Library of Science}
+     }"
+    
+
 ### Usage
 
 GRAPES is developed in C++ under GNU\Linux using POSIX Threads programming and no further dependencies out of standard GNU C++ library. It works on Unix and Mac OS X systems with G++ installed, and it can be compiled under Windows using Gygwin.
@@ -150,23 +170,3 @@ This is the match found between a query with 3 nodes and a target graph. The que
 [Dataset repository](https://github.com/GiugnoLab/Dataset-GRAPES)
 
 <hr />
-
-### Citation
-    "Giugno, R., Bonnici, V., Bombieri, N., Pulvirenti, A., Ferro, A., & Shasha, D. (2013). Grapes:
-    A software for parallel searching on biological graphs targeting multi-core architectures.
-    PloS one, 8(10), e76911."
-   <span style="color:blue">[Online version](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0076911) </span> <br>
-   [Cited by](https://scholar.google.it/scholar?cites=4839872088400060775&as_sdt=2005&sciodt=0,5&hl=it) <br>
-   ###### BibTeX format:
-   
-    "@article{giugno2013grapes,
-    title={Grapes: A software for parallel searching on biological graphs targeting multi-core architectures},
-    author={Giugno, Rosalba and Bonnici, Vincenzo and Bombieri, Nicola and Pulvirenti, Alfredo and Ferro, Alfredo and Shasha, Dennis},
-    journal={PloS one},
-    volume={8},
-    number={10},
-    pages={e76911},
-    year={2013},
-    publisher={Public Library of Science}
-     }"
-    
