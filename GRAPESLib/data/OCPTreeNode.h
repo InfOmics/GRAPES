@@ -164,6 +164,20 @@ public:
 		this->child_count=0;
 		this->is_special=false;
 	}
+	~OCPTreeNode(){
+		OCPTreeNode* prev = NULL;
+		OCPTreeNode* curr = this->first_child;
+		while(curr != NULL){
+			if(prev != NULL){
+				delete prev;
+			}
+			prev = curr;
+			curr = curr->next;
+		}
+		if(prev != NULL){
+			delete prev;
+		}
+	}
 
 	OCPTreeNode* add_child(node_label_t _label){
 		if(this->first_child){

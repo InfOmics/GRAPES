@@ -69,7 +69,12 @@ public:
 	OCPTree(){
 		this->root=new OCPTreeNode((node_label_t)NULL, NULL);
 	}
-	~OCPTree(){};
+	~OCPTree(){
+		std::cout<<"deleting OCPTree\n";
+		if(this->root != NULL){
+			delete this->root;
+		}
+	};
 
 
 	void write(FILE* fd, OCPTreeNode* n){
