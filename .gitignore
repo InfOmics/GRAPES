@@ -21,3 +21,7 @@ vflib2/src/vf_state.o
 vflib2/src/vf_sub_state.o
 vflib2/src/xsubgraph.o
 .vscode/settings.json
+vflib2/query16_020.gfu
+vflib2/db.gfu
+vflib2/vf2.o
+vflib2/vf2

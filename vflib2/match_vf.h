@@ -3,13 +3,13 @@
 
 #include <iostream>
 
-#include <VFlibrary.h>
+#include "VFlibrary.h"
 
 #include <vf2_mono_state.h>
 #include <vf2_sub_state.h>
 #include <match.h>
 
-#include <timer.h>
+#include "timer.h"
 
 #include <fstream>
 
@@ -79,8 +79,8 @@ void matchvf(	MyARGraph* g1,
 
 
 	//match(s0, my_visitor, new my_visitor_data_t(os,gid));
-	//match(s0, my_visitor2, new my_visitor_data_t(os,gid));
-	match(s0, my_visitor3, new my_visitor_data_t(os,gid));
+	match(s0, my_visitor2, new my_visitor_data_t(os,gid));
+	//match(s0, my_visitor3, new my_visitor_data_t(os,gid));
 };
 
 #endif

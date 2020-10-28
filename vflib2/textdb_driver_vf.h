@@ -11,7 +11,7 @@
 #include <map>
 #include <set>
 
-#include <VFlibrary.h>
+#include "VFlibrary.h"
 
 enum GraphFileType {GFT_GFF, GFT_VFU, GFT_VFL, GFT_FSG, GFT_GFD};
 

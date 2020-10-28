@@ -79,7 +79,6 @@ void print_mark();
 
 void graph_build(const std::string& input_network_file, bool direct);
 void graph_find(const std::string& input_network_file, const std::string& query_graph_file, bool direct);
-void graph_find_vf2(const std::string& input_network_file, const std::string& query_graph_file, bool direct);
 
 
 int main(int argc, char* argv[]){
@@ -145,35 +144,6 @@ int main(int argc, char* argv[]){
 
 		graph_find(argv[4], argv[5], direct);
 	}
-
-
-	else if(cmd=="-v" && (argc==7 || argc==9)){
-		cmd = argv[6];
-		if(cmd == "-no"){
-		}
-		else if(cmd == "-console"){
-			mprint_opt = MPRINT_OPT_CONSOLE;
-		}
-		else if(cmd == "-file"){
-			mprint_opt = MPRINT_OPT_FILE;
-		}
-		else{
-			usage(argv);
-		}
-
-		if(argc==9){
-			cmd = argv[7];
-			if(cmd != "-lp"){
-				usage(argv);
-			}
-			if(atoi(argv[8]) <= 0) usage(argv);
-			MAXDEPTH = (u_size_t)atoi(argv[8]);
-		}
-
-		graph_find_vf2(argv[4], argv[5], direct);
-	}
-
-
 	else{
 		usage(argv);
 	}
@@ -487,100 +457,3 @@ std::cout<<"\n\n";
 
 };
 
-
-//bool my_visitor(int n, node_id ni1[], node_id ni2[], void* usr_data){
-//	((MatchListener*)usr_data)->match(n, ni1,ni2);
-//	return false;
-//};
-
-
-void graph_find_vf2(const std::string& input_network_file, const std::string& query_graph_file, bool direct){
-print_mark();
-std::cout<<"\t========QUERY========\n\n";
-std::cout<<"Input database file: "<<input_network_file<<"\n";
-std::cout<<"Query file: "<<query_graph_file<<"\n";
-std::cout<<"\n";
-
-double match_t=0.0, total_t;
-TIMEHANDLE start=start_time();
-TIMEHANDLE start_p=start_time();
-
-	LabelMap labelMap;
-
-	VF2GraphReader_gfu  s_q_reader(labelMap);
-	s_q_reader.direct = direct;
-	s_q_reader.open(query_graph_file);
-	ARGEdit* squery;
-	if((squery = s_q_reader.readGraph()) == NULL){
-		std::cout<<"Cannot open query file for matching\n";
-		exit(1);
-	}
-	s_q_reader.close();
-	QueryGraph aqg(squery);
-	VF2DSAttrComparator* attrComp = new VF2DSAttrComparator();
-	aqg.SetNodeComparator(attrComp);
-
-	MatchListener* mlistener;
-	std::ofstream outs;
-	if(mprint_opt == MPRINT_OPT_NO)
-		mlistener = new EmptyMatchListener();
-	else if(mprint_opt == MPRINT_OPT_CONSOLE)
-		mlistener = new ConsoleMatchListener();
-	else{
-		outs.open("matches.log",std::ios::out);
-		mlistener = new FileMatchListener(outs);
-	}
-
-	std::map<graph_id_t, ReferenceGraph*> rgraphs;
-	VF2GraphReader_gfu  s_r_reader(labelMap);
-	s_r_reader.direct = direct;
-	s_r_reader.open(input_network_file);
-	graph_id_t srid = 0;
-	bool sreaded = true;
-	do{
-		VF2Graph* rgraph = s_r_reader.readSGraph();
-		sreaded = (rgraph != NULL);
-		if(sreaded){
-
-			start_p=start_time();
-
-			State* s0 = new VF2MonoState(&(aqg), rgraph);
-			match(s0, my_visitor, mlistener);
-			delete s0;
-
-			match_t += end_time(start_p);
-
-			srid++;
-		}
-	}while(sreaded);
-
-total_t = end_time(start);
-
-
-if(mprint_opt == MPRINT_OPT_NO){}
-else if(mprint_opt == MPRINT_OPT_CONSOLE){}
-else{
-	outs.flush();
-	outs.close();
-}
-
-//std::set<graph_id_t> candidates;
-//for(std::list<g_match_task_t>::iterator IT = mman.coco_units.begin(); IT!=mman.coco_units.end(); IT++)
-//	candidates.insert((*IT).first);
-
-//int nof_cocos = 0;
-//for(thread_id_t i=0; i<NTHREADS; i++){
-//	nof_cocos += mman.number_of_cocos[i];
-//}
-
-long nof_matches = mlistener->matchcount;
-
-std::cout<<"\n";
-std::cout<<"Number of found matches: "<<nof_matches<<"\n";
-std::cout<<"\n";
-std::cout<<"Matching time: \t"<<match_t<<"\n";
-std::cout<<"Total time: \t"<<total_t<<"\n";
-std::cout<<"\n\n";
-
-
-};
